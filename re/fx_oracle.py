@@ -25,11 +25,14 @@ def upd(*a):
 E.mu.hook_add(UC_HOOK_CODE,lambda *a:n.__setitem__(0,n[0]+1) if started[0] or True else 0,begin=UPD,end=UPD)
 def rend(*a):
     if not started[0]: return
+    if os.environ.get('OOB') and not fr and pend[0] is None:   # OOB=bytes: dump the memory just past the 7 decoded frames at [0x46618] (the original reads 1 row past them)
+        p=rd(0x46618,4)+112000; open(os.environ['OUT']+'.oob','wb').write(bytes(E.mu.mem_read(p,int(os.environ['OOB'])))); print('oob dumped at',hex(p),flush=True)
     pend[0]=dict(n=n[0],ticks=g.ticks,order=rd(0x4ab11,4),row=rd(0x4ab15,4),**{'a%x'%ad:rd(ad,sz) for ad,sz in ST})
 def ret(*a):
     p=pend[0]
     if p is None: return
     p['idx']=np.frombuffer(bytes(E.mu.mem_read(0xA0000,64000)),np.uint8).copy(); p['pal']=np.array(H.pal,np.uint8).reshape(768).copy(); fr.append(p); pend[0]=None
+    if os.environ.get('MAXF') and len(fr)>=int(os.environ['MAXF']): np.savez_compressed(os.environ['OUT'],**{k:np.array([f[k] for f in fr]) for k in fr[0]}); E.mu.emu_stop(); E.exited[0]=1
     if len(fr)%200==0: print(len(fr),'frames order',p['order'],'wall %.0f'%(time.time()-T0),flush=True)
 E.mu.hook_add(UC_HOOK_CODE,rend,begin=REND,end=REND); E.mu.hook_add(UC_HOOK_CODE,ret,begin=RET,end=RET)
 eip=0x27d20

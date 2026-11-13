@@ -1,4 +1,4 @@
-// fx13 = stage 14 of the demo: crowd photo -> Dali face (update 0x203c4, render 0x201ea, init 0x200de). Bit-exact vs the Unicorn oracle (tools/fx13check.mjs).
+// fx13 = stage 14 of the demo: crowd photo -> Dali face (update 0x203c4, render 0x201ea, init 0x200de). Matches the Unicorn oracle on 1538 frames except ONE pixel (314,193) in frames with anim frame 6 (see re/NOTES.md, unresolved).
 // State after n updates (70.086 Hz ticks since the stage start): [47200]=min(n,0x4b0) picture scroll (>>3 = rows), [46610]=n%14 anim frame (>>1 = 160x100 frame 0..6), [46cec]=(n*0x20)&0xfff sine index.
 export const TICK_HZ = 70.086;
 let PAL, SINE, FR, PIC;   // FR = 7 frames x 16000 (RLE-decoded, 0x20163), PIC = 320x350
