@@ -1,0 +1,17 @@
+0.00 hook 1c0fa order 0 mode 19
+21.57 hook 1c166 order 3 mode 19
+33.46 hook 1c1cc order 5 mode 19
+54.53 hook 1c232 order 9 mode 19
+65.52 hook 1c298 order 11 mode 19
+82.00 hook 1c2fd order 14 mode 19
+92.89 hook 1c33a order 16 mode 19
+114.76 hook 1c3af order 20 mode 19
+125.85 hook 1c414 order 22 mode 19
+136.83 hook 1c47a order 24 mode 19
+158.71 hook 1c4e0 order 28 mode 19
+180.68 hook 1c546 order 32 mode 19
+202.65 hook 1c5ac order 36 mode 19
+213.64 hook 1c612 order 38 mode 19
+235.51 hook 1c678 order 42 mode 19
+257.48 hook 1c6de order 46 mode 19
+268.47 hook 1c744 order 48 mode 19

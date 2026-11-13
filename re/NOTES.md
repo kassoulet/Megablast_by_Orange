@@ -1,0 +1,46 @@
+# megademo - reverse-engineering log
+## Layout (phase 1, done)
+- DEMO.EXE = MZ stub + PMODE/W **1.20** (entry 0x59). `unpack_clean.py` (= unpack_pmodew.py + a hook that dumps RAM the moment the program entry is reached, so the dump is *clean*, i.e. before the CRT/MIDAS touched any variable):
+  `ENTRY=0x59 python3 unpack_clean.py 80 ../DEMO.EXE 0x261b 0x340 mem.bin` (user-site unicorn, no `python -I`). `gunzip -k mem.bin.gz` gives the 64 MB dump `mem.bin` used by `emucore.py` (not kept unzipped).
+- **The live program is the flat object at linear 0x1b000..0x62000** (`low.bin` = linear 0x10000.., `low.dis` = objdump -M intel, VMA 0x10000; code uses absolute linear addresses, DS base 0, selector 0x858 in PM). The 0x100000 copy (`image.bin`) is the *unrelocated* load image (offsets relative to the object): do not disassemble it for addresses. (An old `image.dis` of it was deleted.)
+- Entry `_cstart` = 0x27d20 (Watcom, `jmp 0x27d98`). `main` = 0x1bff0. Libs: Watcom CRT, MIDAS-like sound lib (0x23xxx-0x26xxx, S3M loader reads via int21), and a small **retrace-locked timer lib at 0x27936-0x27ca1** (PIT calibration against port 0x3da, ISR 0x27682 on int 8 calls callback 1 at start of vertical retrace, callback 2 after it). Only callback used: `0x1be10 = inc dword [0x52888]` => **one tick per vsync (70.086 Hz in mode 13h)**.
+- Video: **VGA mode 13h, 320x200, linear 0xA0000, DAC palette via ports 0x3c8/0x3c9** (mode-X registers never touched). Pixels are not square: display at 4:3.
+- Init (main 0x1bff0): 0x21dc6 allocs 0x3d3263 bytes (DPMI 0501) and reads **DATA.DAT whole** (open 0x1e168, read 0x1e172) -> so "TITANICS-cruncher decrunches while loading" (string in the CRT area) is a leftover, DATA.DAT is stored raw. Then MIDAS loads MUSTAKS.S3M (0x2673c, handle at 0x562e0), mode 13h, timer start (0x27ba3).
+## Main loop pattern (0x1c087..0x1c75c)
+Straight-line list of ~17 stages. Each stage: `init(); do { snap=[0x52888]; i=0; while([0x52888]-[0x5288c] > i){ 0x1be68(); update(); i++ } [0x5288c]=snap; render() } while([0x4ab11] < N)`; `end()`.
+- `0x1be68` = poll the player: `MIDASgetPlayStatus` (0x24194) fills a struct whose [0]=**order (position)** -> `[0x4ab11]`, [8]=row -> `[0x4ab15]`. Every stage ends on a S3M **order** threshold (pos < N). So scenes are exactly tied to S3M orders; update = fixed 70 Hz logic step, render = once per loop (so rendering speed does not change the animation, only smoothness).
+- Stage table (update / render fn, ends at order N; `hook` = address of `mov [0x5288c],eax`, used by the harness as frame boundary). Times from the golden run (K=7, 10 fps virtual):
+| hook | update | render | until | time (s) | what is seen |
+|---|---|---|---|---|---|
+| 1c0fa | 20401 | 2032b | order 3 | 0 - 21.6 | grey helicopter flying over snow mountains (precalc data, DATA.DAT blob #4 2.8 MB?) |
+| 1c166 | 1e752 | 1e535 | flag [0x4ab19]==1 (set by update; ~order 5) | 21.6 - 33.5 | radial light streaks / god-rays around a bright object |
+| 1c1cc | 1de0a | 1d770 | order 9 | 33.5 - 54.5 | green/teal moire-plasma over the brain image, insets (brain close-up, face) |
+| 1c232 | 1df1e | 1d378 | order 0x0b | 54.5 - 65.5 | same family, "ACCEPT NO LIMITATIONS" logo |
+| 1c298 | 20c7a | 20a13 | order 0x0e | 65.5 - 82 | grey light-ray lines (wireframe-ish) |
+| 1c2fd | 2143a | 2111b | order 0x10 | 82 - 92.9 | red/orange rotating cube-grid |
+| 1c33a (no update loop) | - | 23288 | order 0x14 | 92.9 - 114.8 | grey swirl/vortex texture-warp (PLASTI3D.PCX loaded via 0x231c4) |
+| 1c3af | 21c3b | 21840 | order 0x16 | 114.8 - 125.9 | green 3D voronoi/dodecahedron wire |
+| 1c414 | 1df98 | 1dade | order 0x18 | 125.9 - 136.8 | star logo in circle over moire |
+| 1c47a | 1ffba | 1e8fc | order 0x1c | 136.8 - 158.7 | white "flower" blob (blurred 3D object) |
+| 1c4e0 | 1df98 | 1d574 | order 0x20 | 158.7 - 180.7 | megablast logo + crosshair over moire |
+| 1c546 | 2243d | 2217d | order 0x24 | 180.7 - 202.7 | blue glowing deformed ring/blob |
+| 1c5ac | 206c1 | 20659 | order 0x26 | 202.7 - 213.6 | black/white checkerboard tunnel (asset 01/checker PCX) |
+| 1c612 | 203c4 | 201ea | order 0x2a | 213.6 - 235.5 | crowd photo morphing to a Dali face |
+| 1c678 | 22b1c | 227ea | order 0x2e | 235.5 - 257.5 | bar photo + megablast logo, glitch/blend |
+| 1c6de | 224e9 | 2217d | order 0x30 | 257.5 - 268.5 | blue sphere of points |
+| 1c744 | 2243d | 2217d | order 0x34 | 268.5 - ~285 | green deformed blob; then `0x1bf94` (text mode, prints "pertti"), demo exits at ~285 s |
+(The 2217d/2243d family is shared by 4 stages = one engine, different params; 1df98 update is shared by 2 stages.)
+- S3M timeline: `s3mtime.py` walks MUSTAKS.S3M (A speed, T tempo, B/C jumps, SBx loop, SEx delay) -> `s3mtime.json` (rows [order,pattern,row,t]); 56 orders, 3435 rows, 326 s (the demo stops at order 0x34 = 285 s). Own parser, NOT cross-checked with libopenmpt yet: the stage times above come from the *hook hits* (order read through the stub), which agree with the S3M table to < 1 s (order 3 at 21.5, 9 at 54.4, 0x34 at 285).
+## DATA.DAT (done)
+Not an archive: one blob; 24 offsets in a table at 0x4ab1d (relocated by the load address in the init loop at 0x21dd6) index into it. `extract_data.py` cuts them into `assets/NN_offset_size.bin` (+PNG previews): 0 and 6 RIX3 256x256 (ColoRIX) images; 16 RIX3 320x200 (people at a bar, with palette); 3, 10-15, 22 = 320x200 PCX (brain/face/logo/"orange1996 c est la fin voila"); 1, 7, 19 = 128x128 raw 8-bit (textures/light maps); 2, 8, 9, 18, 20, 23 = 64000 raw 8-bit 320x200 (megablast logo etc.); 5 (128000), 21 (112000), 17 (69020) = unknown tables/LUTs; **4 = 2.8 MB unknown stream (probably the helicopter sequence)**. PLASTI3D.PCX = 512x512 8-bit PCX (cracked-stone texture, used by the vortex stage via 0x231c4).
+## Emulation harness (done, runs the whole demo)
+- `emucore.py` (from b-hyper: flat GDT, LDT, int21/int31 DPMI, bump arena, file I/O for DATA.DAT/S3M/PCX by name; GDT now 512 entries so selector 0x858 works). `harness.py` `Golden`: stubs 0x27936 (calibration), 0x27ba3 (timer start), 0x24194 (getPlayStatus -> order/pattern/row from s3mtime.json at the virtual time), VGA ports (0x3da pattern, palette 0x3c8/9). Virtual clock: at every stage's `[0x5288c]=snap` (16 hooks + the PCX stage loop 0x1c33a) the frame is captured and `[0x52888]` += K (K=7 default = 10 fps virtual, K=1 would be 70 fps) and the music position is advanced by K ticks. No music is played/emulated; MIDAS hardware init is not reached (calibration stubbed, sound device never probed in this path).
+- `golden.py OUT T0 T1 STEP [K]` -> `golden/tNNNN.NN.png` (320x200) + `stages.txt` (time, hook, order). `sheet.py` makes contact sheets. `golden/` = full demo every 2 s (144 frames, K=7). Speed ~1.1-2 s wall per demo second. `s3mtime.py`, `extract_data.py` as above.
+## Caveats / not done
+- K=7 gives 10 fps captures; the logic runs at 70 Hz inside (7 updates per render) so frames are right for the grid but intermediate renders are not captured. No bit-exact claim yet (no reference other than the emulator itself; PIT/retrace values are fake, 17030 counts/frame).
+- The tick rate 70.086 Hz is assumed (retrace-locked callback); stage lengths are determined by S3M order anyway.
+- Effects only identified visually, no per-effect analysis yet; none of the update/render functions are decompiled.
+## Next
+1. Per-effect RE in order of visual interest (shared 2217d engine; 1d770/1d378/1dade/1d574 moire family; 1e535 rays; 2111b cube; 21840 voronoi), find the primitives (DATA offsets, LUTs, palette fades).
+2. Decode blob #4 (helicopter) and 17/5/21 tables.
+3. Add `tools/cmp.py`-style comparison (copy from b-hyper/tools) and a K=1/2 golden at chosen times; port to `web/` with libopenmpt from b-hyper/web/vendor (seek = set order/row then re-simulate: effects are likely stateful, check accumulation per effect like in h7).
