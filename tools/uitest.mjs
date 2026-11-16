@@ -28,5 +28,10 @@ await ev('stv.seek(225.5)');await wait(400);const h1=await hash();await ev('stv.
 ok('seek(225.5) twice gives the same picture (pure function of music time)',h1===h2);
 await ev('stv.seek(226.5)');await wait(400);ok('picture changes with time',(await hash())!==h1);
 await ev('document.getElementById("pp").click()');await wait(2000);const p1=await cur();ok('play resumes after seek',p1>226.5&&p1<231,p1.toFixed(2));
+await ev('document.getElementById("pp").click()');   // pause: the hash must not move with time
+await ev('stv.seek(208.5)');await wait(1500);ok('fx12 (checker tunnel) loaded as a real port at 208.5 s',await ev('stv.ported(12)'));const k1=await hash();
+await ev('stv.seek(150)');await wait(300);await ev('stv.seek(208.5)');await wait(1500);ok('fx12 seek(208.5) twice gives the same picture (replayed feedback state)',k1===await hash());
+await ev('stv.seek(245)');await wait(2500);ok('fx14 (bar photo + logo) loaded as a real port at 245 s',await ev('stv.ported(14)'));const m1=await hash();
+await ev('stv.seek(150)');await wait(300);await ev('stv.seek(245)');await wait(2500);ok('fx14 seek(245) twice gives the same picture (replayed feedback state)',m1===await hash());
 ok('no page exceptions',exc===0);
 ch.kill();srv.close();process.exit(process.exitCode||0);
