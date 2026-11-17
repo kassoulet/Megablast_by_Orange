@@ -20,7 +20,7 @@ await ev('document.getElementById("pp").click()');const a=await cur();await wait
 await ev('(()=>{const s=document.getElementById("seek");s.value=2200;s.dispatchEvent(new Event("input"));})()');await wait(1500);
 const s1=await cur();ok('slider seek to 220 s',Math.abs(s1-220)<0.5,s1.toFixed(2));
 ok('fx13 (crowd - Dali) loaded as a real port at 220 s',await ev('stv.ported(13)'));
-ok('fx00 is still a placeholder',!(await ev('stv.ported(0)')));
+ok('fx02 is still a placeholder',!(await ev('stv.ported(2)')));
 const px=()=>ev('(()=>{const c=document.getElementById("c"),d=c.getContext("2d").getImageData(0,0,c.width,c.height).data;let n=0;const s=new Set();for(let i=0;i<d.length;i+=4){if(d[i]|d[i+1]|d[i+2])n++;s.add(d[i]<<16|d[i+1]<<8|d[i+2])}return [c.width,c.height,n,s.size]})()');
 const [w,h,n,cols]=await px();ok('fx13 canvas 320x200 non-empty',w===320&&h===200&&n>10000,`${n} lit px, ${cols} colours`);
 const hash=()=>ev('(()=>{const c=document.getElementById("c");return Array.from(c.getContext("2d").getImageData(0,0,320,200).data).reduce((a,v,i)=>(a*31+v+i)>>>0,7)})()');
@@ -37,5 +37,11 @@ await ev('stv.seek(262)');await wait(5000);ok('fx15 (blue sphere) loaded as a re
 await ev('stv.seek(275)');await wait(6000);ok('fx16 (green blob) loaded as a real port at 275 s',await ev('stv.ported(16)'));
 await ev('stv.seek(245)');await wait(2500);ok('fx14 (bar photo + logo) loaded as a real port at 245 s',await ev('stv.ported(14)'));const m1=await hash();
 await ev('stv.seek(150)');await wait(300);await ev('stv.seek(245)');await wait(2500);ok('fx14 seek(245) twice gives the same picture (replayed feedback state)',m1===await hash());
+await ev('stv.seek(10)');await wait(4000);ok('fx00 (helicopter) loaded as a real port at 10 s',await ev('stv.ported(0)'));const o1=await hash();
+await ev('stv.seek(150)');await wait(300);await ev('stv.seek(10)');await wait(4000);ok('fx00 seek(10) twice gives the same picture (pure function of music time)',o1===await hash());
+await ev('stv.seek(70)');await wait(4000);ok('fx04 (light lines) loaded as a real port at 70 s',await ev('stv.ported(4)'));const q1=await hash();
+await ev('stv.seek(150)');await wait(300);await ev('stv.seek(70)');await wait(4000);ok('fx04 seek(70) twice gives the same picture (replayed feedback state)',q1===await hash());
+await ev('stv.seek(28)');await wait(4000);ok('fx01 (light rays) loaded as a real port at 28 s',await ev('stv.ported(1)'));const w1=await hash();
+await ev('stv.seek(150)');await wait(300);await ev('stv.seek(28)');await wait(4000);ok('fx01 seek(28) twice gives the same picture (replayed feedback state)',w1===await hash());
 ok('no page exceptions',exc===0);
 ch.kill();srv.close();process.exit(process.exitCode||0);
