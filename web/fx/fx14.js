@@ -70,6 +70,8 @@ export const palette = out => { for (let i = 0; i < 768; i++) out[i] = PAL[i]; }
 // player API: n = ticks since the stage start (order 0x2a row 0), render n follows n updates. Seek = replay from the start (<= ~1550 frames), checkpoints every 128.
 // Rows 0-7 and 192-199 are not written by the stage: they hold fx13's last frame (see render).
 let cache = null; const orderAt = t => pos(t).order;
+// false = black bars on rows 0-7 / 192-199 (the stale fx13 frame under fx14's palette shows as green garbage); true = what the emulated original shows
+export const KEEP_FX13_BORDER = false;
 export function render(t, ctx) {
   const T0 = at(0x2a, 0), n = Math.max(1, Math.floor((t - T0) * TICK_HZ) + 1);
   if (!cache || cache.n > n) cache = { n: 0, s: new Sim(), idx: new Uint8Array(64000) };
@@ -77,5 +79,5 @@ export function render(t, ctx) {
   if (cache.n < n) { while (cache.n < n) { cache.n++; s.tick(orderAt(T0 + (cache.n - 1) / TICK_HZ)); if (cache.n < n) s.render(cache.idx); } s.render(cache.idx); }
   // rows 0-7 / 192-199 are never written by this stage: VRAM still holds fx13's last frame (oracle: all 5120 px equal to fx13 at n=1533 = its last render; ideal model: its last tick before order 0x2a)
   const nEnd = Math.floor((at(0x2a, 0) - at(0x26, 0)) * TICK_HZ - 1e-9) + 1, b = new Uint8Array(64000); f13.renderN(nEnd, b, new Uint8Array(768));
-  ctx.idx.set(cache.idx); ctx.idx.set(b.subarray(0, 8 * 320), 0); ctx.idx.set(b.subarray(192 * 320, 64000), 192 * 320); const p = new Uint8Array(768); palette(p); for (let i = 0; i < 768; i++) ctx.pal[i] = (p[i] << 2) | (p[i] >> 4);
+  ctx.idx.set(cache.idx); if (KEEP_FX13_BORDER) { ctx.idx.set(b.subarray(0, 8 * 320), 0); ctx.idx.set(b.subarray(192 * 320, 64000), 192 * 320); } else { ctx.idx.fill(0, 0, 8 * 320); ctx.idx.fill(0, 192 * 320, 64000); } const p = new Uint8Array(768); palette(p); for (let i = 0; i < 768; i++) ctx.pal[i] = (p[i] << 2) | (p[i] >> 4);
 }
