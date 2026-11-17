@@ -11,11 +11,14 @@ export const palette = (out, swap = false) => { for (let i = 0; i < 256; i++) { 
 const PAD = 0x1400, SIZE = 0x12200 + 0x1400;
 export class Sim {
   // variant: 0 = update 0x2243d (stage 12, 17), 1 = update 0x224e9 (stage 16); prev = Sim to continue from (stage 17 keeps stage 16's planes and phases; its init 0x220d7 only resets the steps)
-  constructor(variant = 0, prev = null) {
+  constructor(variant = 0, prev = null, keep = true) {
     this.variant = variant; this.amp = 256;
     this.ph = new Int32Array(16); this.ph.set([0, 0, 0, 0, 0, 0, 0, 0, 64, 128, 128, 64, 64, 128, 128, 64]);   // 4ac94..4acb0 phases, 4acb4..4acd0 steps
     this.p20 = 0; this.cur = new Uint8Array(SIZE); this.oth = new Uint8Array(SIZE); this.Z = new Uint8Array(16384);
-    if (prev) { this.amp = prev.amp; this.ph.set(prev.ph); this.p20 = prev.p20; this.cur.set(prev.cur); this.oth.set(prev.oth); this.ph.set([0x40, 0x30, 0x30, 0x40, 0x40, 0x30, 0x30, 0x100], 8); }
+    if (prev) {   // keep=false (stage 16): phases/amp/p20 survive from stage 12, planes cleared, steps default; keep=true (stage 17): planes kept, steps 0x40..
+      this.amp = prev.amp; this.ph.set(prev.ph.subarray(0, 8)); this.p20 = prev.p20;
+      if (keep) { this.cur.set(prev.cur); this.oth.set(prev.oth); this.ph.set([0x40, 0x30, 0x30, 0x40, 0x40, 0x30, 0x30, 0x100], 8); }
+    }
   }
   tick() {
     const p = this.ph; if (this.amp !== 0) this.amp -= 4;
@@ -62,8 +65,8 @@ export const TICK_HZ = 70.086;
 // Player stage: n = max(1, floor((t - T0) * TICK_HZ) + 1) ticks (render n follows n updates), replayed from the stage start (cache; render() advances the planes so it runs once per tick).
 // ponytail: the real tick count at each render is machine dependent (K=7 batching in the harness), same model as fx12/fx14.
 export class Stage {
-  constructor(T0, variant, mkPrev = null) { this.T0 = T0; this.variant = variant; this.mkPrev = mkPrev; this.c = null; }
-  start() { return new Sim(this.variant, this.mkPrev ? this.mkPrev() : null); }
+  constructor(T0, variant, mkPrev = null, keep = true) { this.T0 = T0; this.variant = variant; this.mkPrev = mkPrev; this.keep = keep; this.c = null; }
+  start() { return new Sim(this.variant, this.mkPrev ? this.mkPrev() : null, this.keep); }
   render(t, idx, pal, swap = false) {
     const n = Math.max(1, Math.floor((t - this.T0) * TICK_HZ) + 1);
     if (!this.c || this.c.n > n) this.c = { n: 0, s: this.start(), idx: new Uint8Array(64000) };

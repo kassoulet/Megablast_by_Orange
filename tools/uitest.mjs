@@ -31,6 +31,10 @@ await ev('document.getElementById("pp").click()');await wait(2000);const p1=awai
 await ev('document.getElementById("pp").click()');   // pause: the hash must not move with time
 await ev('stv.seek(208.5)');await wait(1500);ok('fx12 (checker tunnel) loaded as a real port at 208.5 s',await ev('stv.ported(12)'));const k1=await hash();
 await ev('stv.seek(150)');await wait(300);await ev('stv.seek(208.5)');await wait(1500);ok('fx12 seek(208.5) twice gives the same picture (replayed feedback state)',k1===await hash());
+await ev('stv.seek(190)');await wait(4000);ok('fx11 (blue ring, shared 0x2217d engine) loaded as a real port at 190 s',await ev('stv.ported(11)'));const r1=await hash();
+await ev('stv.seek(150)');await wait(300);await ev('stv.seek(190)');await wait(4000);ok('fx11 seek(190) twice gives the same picture',r1===await hash());
+await ev('stv.seek(262)');await wait(5000);ok('fx15 (blue sphere) loaded as a real port at 262 s',await ev('stv.ported(15)'));
+await ev('stv.seek(275)');await wait(6000);ok('fx16 (green blob) loaded as a real port at 275 s',await ev('stv.ported(16)'));
 await ev('stv.seek(245)');await wait(2500);ok('fx14 (bar photo + logo) loaded as a real port at 245 s',await ev('stv.ported(14)'));const m1=await hash();
 await ev('stv.seek(150)');await wait(300);await ev('stv.seek(245)');await wait(2500);ok('fx14 seek(245) twice gives the same picture (replayed feedback state)',m1===await hash());
 ok('no page exceptions',exc===0);
