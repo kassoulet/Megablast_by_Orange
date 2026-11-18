@@ -96,4 +96,27 @@ Picked the stages with integer-only code (the vortex 0x23288 and the 0x22dfc war
 - Oracle: `STAGE=1c166 NEXT=1c1cc UPD=1e752 REND=1e535 RET=1e750 K1ORDER=03 STATE=4619e:4,44928:4,... OUT=re/oracle_fx01.npz` (5 min). 832 frames, order 3 row 0 .. order 5 row 10; the stage = 833 ticks = 11.89 s (tabulated fx03 start (5,12) = 11.99 s: agrees to 0.1 s).
 ## Not done / left
 - fx13's 1-pixel diff (314,193) NOT resolved (not cheap: the byte comes from memory past the original's buffer that changes over time; the next step would be a UC_HOOK_MEM_WRITE on that address). The stage code 0x20454 is the same shape as fx00's blit, but fx00 has no out-of-bounds read.
-- Unported: fx02/03/08/10 (moire family, large shared helpers), fx05 cube grid (254-instr render), fx06 vortex + fx07 voronoi (x87), fx09 flower (1200-instr render).
+- Unported (fx05, fx09 since done): fx02/03/08/10 (moire family, large shared helpers), fx05 cube grid (254-instr render), fx06 vortex + fx07 voronoi (x87), fx09 flower (1200-instr render).
+
+---
+# Session 4: fx05 ported (bit-exact, first try)
+## fx05 = stage 6 "cube grid" (update 0x2143a, render 0x2111b, line 0x20d46, init 0x210bc, ends order 0x10): DONE, 762 frames, 0 diffs
+- Statics: sine 0x3705e (cos = +1025 entries), 64 vertices (4x4x4 grid, dwords x,y,z at 0x48560 stride 16), palette 0x47f60, background = asset 8 (64000 B) at [47f48]; `tools/export_fx05.py` -> `web/assets/fx05.bin`.
+- Update: fade [47f4c] (0x100 at rest) -= 2 unless 0x100; set 0x140 when the S3M ROW (not order; [48b71] = [4ab15]) is 0,6,0x12,0x1c,0x2a,0x32,0x3e (the "compare with previous row" code stores the old value back, so [48b75]=-232 never changes and every tick on such a row re-arms); angles [48b69] += 4, [48b65] += 3, [48b61] += 5 (& 0x1fff, sine index >> 1); y offset [47f40] += 4 from -0x700; z offset 0x300.
+- Render: rotations in the order (48b65 on y,z), (48b69 on x,z), (48b61 on x,y), each `(a*c - b*s) >> 10`, then >> 8, +offsets, z <= 0x80 -> point -1, else x*128/z+0xa0, y*128/z+0x64. Edges: three families (+1, +4, +16 in grid index; 3 x 4 x 4 each, order as in the asm) through the line walker 0x20d46 (fx04-like: steps (d<<8)/(max|d|+1), reject on shared outside, fast path when both ends inside else per-pixel bounds 0..0x137 / 0..0xbf, 12-px pattern saturation < 0x38). Blur dwords at +-4 B / +-0x500 B, x7/8, + background dword add -> VRAM, swap.
+- Oracle: `STAGE=1c2fd NEXT=1c33a UPD=2143a REND=2111b RET=2142a K1ORDER=0e STATE=47f40:4,47f4c:4,48b61:4,48b65:4,48b69:4,48b75:4 OUT=re/oracle_fx05.npz python3 fx_oracle.py` (2.5 min). `python3 tools/oracle2bin.py re/oracle_fx05.npz x.bin; node tools/fx05check.mjs x.bin`.
+- Seek class: ACCUMULATING (replay from the stage start).
+
+## fx09 = stage 10 "flower blob" (update 0x1ffba, render 0x1e8fc, init 0x1e89e, ends order 0x1c): DONE, 1533 frames, 0 diffs
+- Statics: sine 0x3705e, 16x16 splat pattern 0x464ac (init shifts every byte >> 2), background = asset 18 ([4ab65]); `tools/export_fx09.py` -> `web/assets/fx09.bin`. Initial counters: [465ac]=2048, all others 0.
+- Update: [465ac] += 5 (& 0x1fff), spin [465f4] += 1, 8 phases [465b4..465d0] += 11,-14,15,7,-13,-16,-8,12, palette phases [465f8/fc/600] += 0x39,0x32,-0x33 (all & 0xfff). No dependence on order/row.
+- Render: copies of the 8 phases advance +0x14,0x14,0x10,0x400,0x100,0x4a0,0x200,0x300 per point (1024 points, spin += 4 per point, local), r = sum sin + (sin[[465ac]>>1]+0x200)*8, point (sin*r>>16+0xa0, cos*r>>16+0x64), splat if x<0x130, y<0xb8 (16 rows x 16 B at stride 0x140, add only where byte < 0x3c); blur (dwords +-3 B, +-0x3c0 B, sum>>2, minus >>2 per byte), VRAM = blur + asset 18, swap; palette (sin+0x4400)*i>>13 clamp 0x3f.
+- Oracle: `STAGE=1c47a NEXT=1c4e0 UPD=1ffba REND=1e8fc RET=1ffaa K1ORDER=18 STATE=465ac:4,465f4:4,465b4:4,465d0:4,465f8:4,46600:4 OUT=re/oracle_fx09.npz python3 fx_oracle.py` (6 min).
+- Left: fx02/03/08/10 (moire family), fx06 vortex, fx07 voronoi (x87) not started.
+
+---
+# Session 5: moire family + fx07 ported (bit-exact vs oracle)
+- Oracles (from re/): fx02 `STAGE=1c1cc NEXT=1c232 UPD=1de0a REND=1d770 RET=1dadd K1ORDER=05`; fx03 `STAGE=1c232 NEXT=1c298 UPD=1df1e REND=1d378 RET=1d573 K1ORDER=09`; fx08 `STAGE=1c414 NEXT=1c47a UPD=1df98 REND=1dade RET=1ddfd K1ORDER=16`; fx10 `STAGE=1c4e0 NEXT=1c546 UPD=1df98 REND=1d574 RET=1d76f K1ORDER=1c`; fx07 `STAGE=1c3af NEXT=1c414 UPD=21c3b REND=21840 RET=21c2e K1ORDER=14`. `tools/oracle2bin.py` now writes a .json sidecar of STATE fields.
+- Moire: shared tail at 0x1dfe2; mesh generators 0x1d770 (fx02), 0x1c7c9 (fx03), 0x1dade (fx08), 0x1ca71 (fx10); inits 0x1ceb6/0x1d26f/0x1d166/0x1d023; row-fade table 0x447de (fx08/10). fx08's render has no palette fade (DAC keeps init palette). Cross-stage state persists: `END` tick counts in moire.js come from the oracle run (timing dependent).
+- fx07: 20 vertices, 30 edges via line routine 0x2157c; its `cdq; xor` abs idiom yields |d|-1 for negative d (step count fix). Rows 0/199 not compared.
+- Left: fx06 vortex (x87 init 0x231c4, render 0x23288). Idea: dump the init-generated tables from emulator memory instead of recomputing them. player.js placeholder code kept until fx06 is done.
