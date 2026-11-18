@@ -58,6 +58,7 @@ export class Sim {
     for (let i = 0; i < 768; i++) { const v = (PAL[i] * this.fade) >> 8; pal[i] = v > 0x3f ? 0x3f : v & 255; }
   }
 }
+// K0 re-check (fx06 ported, K=1 oracle): stage 7 lasts 1536 ticks (6505..8040) = floor((T7-T6)*70.086) = 1536 from the libopenmpt timeline, so K0 is consistent. The oracle's first n=1540 here is the K=7 batching of that run (7*220).
 // player: render k (1 = first, at the stage start) follows K0+k ticks: stage 7 (fx06, no update loop) lets the tick counter run, so the first loop of fx07 runs ALL of fx06's ticks at once (oracle: first n = 1540 = 21.97 s)
 // with the row of that moment (row 0 -> flash re-armed each time); one LCG advance per render. Model k = floor((t-T7)*70.086)+1 as for the other stages.
 let cache = null;

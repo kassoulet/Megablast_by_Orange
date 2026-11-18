@@ -120,3 +120,12 @@ Picked the stages with integer-only code (the vortex 0x23288 and the 0x22dfc war
 - Moire: shared tail at 0x1dfe2; mesh generators 0x1d770 (fx02), 0x1c7c9 (fx03), 0x1dade (fx08), 0x1ca71 (fx10); inits 0x1ceb6/0x1d26f/0x1d166/0x1d023; row-fade table 0x447de (fx08/10). fx08's render has no palette fade (DAC keeps init palette). Cross-stage state persists: `END` tick counts in moire.js come from the oracle run (timing dependent).
 - fx07: 20 vertices, 30 edges via line routine 0x2157c; its `cdq; xor` abs idiom yields |d|-1 for negative d (step count fix). Rows 0/199 not compared.
 - Left: fx06 vortex (x87 init 0x231c4, render 0x23288). Idea: dump the init-generated tables from emulator memory instead of recomputing them. player.js placeholder code kept until fx06 is done.
+
+---
+# Session 6: fx06 vortex ported (bit-exact vs oracle) - all 17 stages done
+## fx06 = stage 7 (render 0x23288, init 0x231c4 = PCX load + palette >>2 only, tables 0x22b80, warp 0x22dfc, matrix 0x28190 (Rx*Ry*Rz) / product 0x28318): DONE, 1536 frames, 0 diffs
+- Nothing needs dumping from emulator memory: the init generates no tables (the object fields start at 0); everything is recomputed per render in JS with float32 stores. Layout of the object O (ecx): [0]=PCX object, matrix at O+4 (12 floats, [11]=O+0x30 = z shift g), a3c/a40/a44 = next angles, a48, a4c, a50, a5c = previous A, screen ptr 0x34, buffer 0x38.
+- Per render: A = f32(30*tick); matrix from the PREVIOUS render's angles; angles' = (sin(.000244A)*pi*.3, sin(.00021A)*pi*.3, 2*sin(.0002A)*sin(.0002513A)); w3 = (sin(.0001A)+1)/2; z shift g = f32(.0992 A). 41x26 lattice, bit-trick sqrt (halve exponent+mantissa bits) twice, fpatan -> U (int, 2^17 per turn), V = 128*(rho+g); wave table = 64-step float32 triangle (0..30) x 4. Cells 8x8 px, j stride 8 rows (0xa00: the +0x8c0 in the asm comes after the +320 of the i loop).
+- Pitfalls found: fdivrp/fsubrp (objdump Intel names) = ST(i) = ST(0) op ST(i); the bit trick is applied to E12 (not Pz). Tables matched the emulator on the first try; the only bug was the j stride.
+- Oracle `STAGE=1c33a NEXT=1c3af UPD=1c33a REND=23288 RET=233ee K1ORDER=10 STATE=52888:4 OUT=re/oracle_fx06.npz` (6 min): ticks 6505..8040, one render per tick. Check `python3 tools/oracle2bin.py re/oracle_fx06.npz x.bin; node tools/fx06check.mjs x.bin`.
+- fx07 K0 re-check: stage 7 = 1536 ticks at K=1 = the model K0 (1536); fx07's oracle ran K=7 for stage 7 (first n 1540 = 7*220), not comparable.

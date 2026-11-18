@@ -1,4 +1,4 @@
-// UI smoke test (headless google-chrome, CDP): play advances time, pause holds, seek (slider + API), ported effect renders (fx13) while the others show the placeholder, 4:3 box, seek determinism, no page exceptions. usage: node tools/uitest.mjs
+// UI smoke test (headless google-chrome, CDP): play advances time, pause holds, seek (slider + API), ported effect renders (all 17 effects load as real ports), 4:3 box, seek determinism, no page exceptions. usage: node tools/uitest.mjs
 import {spawn} from 'child_process';import fs from 'fs';import http from 'http';import path from 'path';import {fileURLToPath} from 'url';
 const root=path.join(path.dirname(fileURLToPath(import.meta.url)),'../web');
 const srv=http.createServer((q,r)=>{let p=path.join(root,q.url.split('?')[0]);if(p.endsWith('/'))p+='index.html';fs.readFile(p,(e,d)=>{if(e){r.writeHead(404);r.end();return;}const m={'.html':'text/html','.js':'text/javascript','.json':'application/json','.bin':'application/octet-stream','.s3m':'application/octet-stream'};r.writeHead(200,{'content-type':m[path.extname(p)]||'application/octet-stream'});r.end(d);});}).listen(0);
@@ -20,7 +20,6 @@ await ev('document.getElementById("pp").click()');const a=await cur();await wait
 await ev('(()=>{const s=document.getElementById("seek");s.value=2200;s.dispatchEvent(new Event("input"));})()');await wait(1500);
 const s1=await cur();ok('slider seek to 220 s',Math.abs(s1-220)<0.5,s1.toFixed(2));
 ok('fx13 (crowd - Dali) loaded as a real port at 220 s',await ev('stv.ported(13)'));
-ok('fx06 (vortex) is still a placeholder',!(await ev('stv.ported(6)')));
 const px=()=>ev('(()=>{const c=document.getElementById("c"),d=c.getContext("2d").getImageData(0,0,c.width,c.height).data;let n=0;const s=new Set();for(let i=0;i<d.length;i+=4){if(d[i]|d[i+1]|d[i+2])n++;s.add(d[i]<<16|d[i+1]<<8|d[i+2])}return [c.width,c.height,n,s.size]})()');
 const [w,h,n,cols]=await px();ok('fx13 canvas 320x200 non-empty',w===320&&h===200&&n>10000,`${n} lit px, ${cols} colours`);
 const hash=()=>ev('(()=>{const c=document.getElementById("c");return Array.from(c.getContext("2d").getImageData(0,0,320,200).data).reduce((a,v,i)=>(a*31+v+i)>>>0,7)})()');
@@ -45,7 +44,7 @@ await ev('stv.seek(70)');await wait(4000);ok('fx04 (light lines) loaded as a rea
 await ev('stv.seek(150)');await wait(300);await ev('stv.seek(70)');await wait(4000);ok('fx04 seek(70) twice gives the same picture (replayed feedback state)',q1===await hash());
 await ev('stv.seek(28)');await wait(4000);ok('fx01 (light rays) loaded as a real port at 28 s',await ev('stv.ported(1)'));const w1=await hash();
 await ev('stv.seek(150)');await wait(300);await ev('stv.seek(28)');await wait(4000);ok('fx01 seek(28) twice gives the same picture (replayed feedback state)',w1===await hash());
-for (const [i, name, t] of [[2, 'moire plasma', 40], [3, 'moire + logo', 58], [7, 'voronoi wire', 120], [8, 'star logo', 130], [10, 'megablast logo', 165]]) {
+for (const [i, name, t] of [[2, 'moire plasma', 40], [6, 'vortex', 100], [3, 'moire + logo', 58], [7, 'voronoi wire', 120], [8, 'star logo', 130], [10, 'megablast logo', 165]]) {
   await ev(`stv.seek(${t})`); await wait(3500); ok(`fx${String(i).padStart(2, '0')} (${name}) loaded as a real port at ${t} s`, await ev(`stv.ported(${i})`)); const a1 = await hash();
   await ev('stv.seek(5)'); await wait(300); await ev(`stv.seek(${t})`); await wait(3500); ok(`fx${String(i).padStart(2, '0')} seek(${t}) twice gives the same picture`, a1 === await hash());
 }

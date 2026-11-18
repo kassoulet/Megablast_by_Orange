@@ -1,5 +1,5 @@
 // player.js - megademo shell (copied from stv): 320x200 indexed canvas shown 4:3, music via libopenmpt (chiptune3), pause + seek, effect jump.
-// FX module API (web/fx/fxNN.js, NN=00..12):  export async function init(assets)  /  export function render(t, ctx)
+// FX module API (web/fx/fxNN.js, NN=00..16):  export async function init(assets)  /  export function render(t, ctx)
 //   ctx = {fb: Uint8Array(128000) palette indices (first 320*ctx.h used; ctx.h = 200 unless the effect sets 400), pal: Uint8Array(768) RGB 8-bit (0..255; scale 6-bit VGA values *255/63 yourself),
 //          order, row (S3M position, from libopenmpt), t (music seconds, absolute)}. render fills ctx.fb and ctx.pal in place.
 import { FX, DUR, fxAt, fmt, displaySize } from './timetable.js';
@@ -17,24 +17,16 @@ const loading = [];   // per effect: in-flight load promise (one import+init per
 function load(i) {
   return loading[i] ??= (async () => {
     try { const m = await import(`./fx/fx${String(i).padStart(2, '0')}.js`); await m.init(); mods[i] = m; }
-    catch (e) { mods[i] = null; }   // not ported yet (or broken): placeholder
+    catch (e) { mods[i] = null; }   // broken: nothing drawn
   })();
-}
-const off = document.createElement('canvas'); off.width = 320; off.height = 200;
-function placeholder(i) {
-  if (cvs.height !== 200) { cvs.height = 200; img = g.createImageData(320, 200); px = new Uint32Array(img.data.buffer); }
-  const c = off.getContext('2d'); c.fillStyle = '#101018'; c.fillRect(0, 0, 320, 200);
-  c.fillStyle = '#ff8a3d'; c.font = '16px monospace'; c.textAlign = 'center';
-  c.fillText(`fx${String(i).padStart(2, '0')}: ${FX[i].name}`, 160, 95); c.fillStyle = '#888'; c.fillText('not ported yet', 160, 118);
-  g.drawImage(off, 0, 0);
 }
 function draw(t) {
   const i = fxAt(t), m = mods[i];
-  if (m === undefined) load(i).then(() => { if (fxAt(cur()) === i) draw(cur()); }); // loads async; placeholder meanwhile, redrawn once loaded
-  if (!m) return placeholder(i);
+  if (m === undefined) load(i).then(() => { if (fxAt(cur()) === i) draw(cur()); }); // loads async, redrawn once loaded
+  if (!m) return;   // module still loading (or failed: see console)
   if (cp) { ctx.order = cp.order | 0; ctx.row = cp.row | 0; }
   ctx.t = t; ctx.h = 200;
-  try { m.render(t, ctx); } catch (e) { console.error('fx' + i, e); mods[i] = null; return placeholder(i); }
+  try { m.render(t, ctx); } catch (e) { console.error('fx' + i, e); mods[i] = null; return; }
   if (cvs.height !== ctx.h) { cvs.height = ctx.h; img = g.createImageData(320, ctx.h); px = new Uint32Array(img.data.buffer); }
   const p = ctx.pal;
   for (let k = 0; k < 320 * ctx.h; k++) { const j = ctx.fb[k] * 3; px[k] = 0xff000000 | p[j + 2] << 16 | p[j + 1] << 8 | p[j]; }
