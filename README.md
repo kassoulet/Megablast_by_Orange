@@ -21,3 +21,11 @@ Run the player: `cd web && python3 -m http.server 8000` (shell copied from `../s
 See `re/NOTES.md`.
 
 - fx14 player: rows 0-7 / 192-199 are drawn black (`KEEP_FX13_BORDER = false` in `web/fx/fx14.js`); the emulated original shows fx13's stale last frame there under fx14's palette, i.e. green bands. `tools/fx14check.mjs` is unaffected (it does not use `render`).
+
+## Write-ups on the site
+
+The write-ups are published as HTML next to the player (`web/writeups/`, generated from `WRITEUP-*.md` and the referenced `figures/`; needs pandoc). After editing a write-up, regenerate with:
+
+```
+../tools/mkwriteups.sh . web    # shared script: demoports/tools/mkwriteups.sh REPO_DIR PUBLISH_SUBDIR
+```

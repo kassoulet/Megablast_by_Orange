@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>MEGABLAST (Orange, Dec 1996) - the 17 scenes and the art behind
+them</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+  :root{--bg:#fff;--fg:#1d1d22;--mut:#666;--ac:#c4155a;--code:#f3f3f6;--bd:#d8d8e0}
+  @media (prefers-color-scheme:dark){:root{--bg:#0b0b10;--fg:#d8d8e0;--mut:#9a9aa8;--ac:#ff6a9a;--code:#17171f;--bd:#33333f}}
+  *{box-sizing:border-box}
+  body{margin:0 auto;max-width:62rem;padding:0 16px;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,sans-serif}
+  #wunav{display:flex;gap:16px;flex-wrap:wrap;padding-top:12px;padding-bottom:8px;border-bottom:1px solid var(--bd);font-size:14px}
+  a{color:var(--ac)}
+  h1,h2,h3,h4{line-height:1.25;margin-top:1.8em}
+  img{max-width:100%;height:auto;image-rendering:auto}
+  pre{background:var(--code);border:1px solid var(--bd);border-radius:4px;padding:10px 12px;overflow-x:auto;font-size:13px;line-height:1.4}
+  code{background:var(--code);padding:1px 4px;border-radius:3px;font-size:.92em;overflow-wrap:anywhere}
+  pre code{background:none;padding:0;overflow-wrap:normal}
+  table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%}
+  td,th{border:1px solid var(--bd);padding:4px 8px}
+  blockquote{border-left:3px solid var(--bd);margin-left:0;padding-left:14px;color:var(--mut)}
+  #TOC{font-size:14px}#TOC ul{padding-left:1.2em}
+  #TOC>ul{padding-left:0;list-style:none}
+  details#toc-box{margin:12px 0}
+  </style>
+</head>
+<body>
+<nav id="wunav"><a href="../index.html">&larr; the demo</a> <a href="WRITEUP-asm.html">asm</a> <a href="WRITEUP-effects.html">effects</a> <a href="https://github.com/kassoulet/Megablast_by_Orange">README on GitHub</a></nav>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a
+href="#megablast-orange-dec-1996---the-17-scenes-and-the-art-behind-them"
+id="toc-megablast-orange-dec-1996---the-17-scenes-and-the-art-behind-them">MEGABLAST
+(Orange, Dec 1996) - the 17 scenes and the art behind them</a>
+<ul>
+<li><a href="#at-a-glance" id="toc-at-a-glance">At a glance</a></li>
+<li><a href="#timeline" id="toc-timeline">Timeline</a></li>
+<li><a href="#display-and-timing" id="toc-display-and-timing">Display
+and timing</a></li>
+<li><a href="#fx00---helicopter-stage-1-orders-0-2"
+id="toc-fx00---helicopter-stage-1-orders-0-2">fx00 - helicopter (stage
+1, orders 0-2)</a></li>
+<li><a href="#fx01---light-rays-stage-2-orders-3-5"
+id="toc-fx01---light-rays-stage-2-orders-3-5">fx01 - light rays (stage
+2, orders 3-5)</a></li>
+<li><a href="#fx02--fx03--fx08--fx10---the-moire-family-stages-3-4-9-11"
+id="toc-fx02--fx03--fx08--fx10---the-moire-family-stages-3-4-9-11">fx02
+/ fx03 / fx08 / fx10 - the moire family (stages 3, 4, 9, 11)</a></li>
+<li><a href="#fx04---light-lines-stage-5-orders-0x0b-0x0d"
+id="toc-fx04---light-lines-stage-5-orders-0x0b-0x0d">fx04 - light lines
+(stage 5, orders 0x0b-0x0d)</a></li>
+<li><a href="#fx05---cube-grid-stage-6-orders-0x0e-0x0f"
+id="toc-fx05---cube-grid-stage-6-orders-0x0e-0x0f">fx05 - cube grid
+(stage 6, orders 0x0e-0x0f)</a></li>
+<li><a href="#fx06---vortex-stage-7-orders-0x10-0x13"
+id="toc-fx06---vortex-stage-7-orders-0x10-0x13">fx06 - vortex (stage 7,
+orders 0x10-0x13)</a></li>
+<li><a href="#fx07---voronoi-wire-stage-8-orders-0x14-0x15"
+id="toc-fx07---voronoi-wire-stage-8-orders-0x14-0x15">fx07 - voronoi
+wire (stage 8, orders 0x14-0x15)</a></li>
+<li><a href="#fx09---flower-blob-stage-10-orders-0x18-0x1b"
+id="toc-fx09---flower-blob-stage-10-orders-0x18-0x1b">fx09 - flower blob
+(stage 10, orders 0x18-0x1b)</a></li>
+<li><a
+href="#fx11--fx15--fx16---blue-ring-blue-sphere-green-blob-stages-12-16-17"
+id="toc-fx11--fx15--fx16---blue-ring-blue-sphere-green-blob-stages-12-16-17">fx11
+/ fx15 / fx16 - blue ring, blue sphere, green blob (stages 12, 16,
+17)</a></li>
+<li><a href="#fx12---checker-tunnel-stage-13-orders-0x24-0x25"
+id="toc-fx12---checker-tunnel-stage-13-orders-0x24-0x25">fx12 - checker
+tunnel (stage 13, orders 0x24-0x25)</a></li>
+<li><a href="#fx13---crowd-to-dali-stage-14-orders-0x26-0x29"
+id="toc-fx13---crowd-to-dali-stage-14-orders-0x26-0x29">fx13 - crowd to
+Dali (stage 14, orders 0x26-0x29)</a></li>
+<li><a href="#fx14---bar-photo-and-logo-stage-15-orders-0x2a-0x2d"
+id="toc-fx14---bar-photo-and-logo-stage-15-orders-0x2a-0x2d">fx14 - bar
+photo and logo (stage 15, orders 0x2a-0x2d)</a></li>
+<li><a href="#the-art-where-it-lives-how-it-was-decoded"
+id="toc-the-art-where-it-lives-how-it-was-decoded">The art: where it
+lives, how it was decoded</a>
+<ul>
+<li><a href="#container" id="toc-container">Container</a></li>
+<li><a href="#formats" id="toc-formats">Formats</a></li>
+<li><a href="#catalogue-previews-in-figures"
+id="toc-catalogue-previews-in-figures">Catalogue (previews in
+<code>figures/</code>)</a></li>
+</ul></li>
+<li><a href="#what-is-bit-exact-and-what-is-not"
+id="toc-what-is-bit-exact-and-what-is-not">What is bit-exact and what is
+not</a></li>
+<li><a href="#known-discrepancies-in-the-existing-comments"
+id="toc-known-discrepancies-in-the-existing-comments">Known
+discrepancies in the existing comments</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1
+id="megablast-orange-dec-1996---the-17-scenes-and-the-art-behind-them">MEGABLAST
+(Orange, Dec 1996) - the 17 scenes and the art behind them</h1>
+<p>Companion of <code>WRITEUP-asm.md</code> (the asm tricks, with
+addresses). Everything here comes from the code and notes in this folder
+(<code>README.md</code>, <code>re/NOTES.md</code>,
+<code>web/fx/*.js</code>, <code>tools/export_*.py</code>, the
+disassembly of <code>re/low.bin</code>) and from decoding
+<code>DATA.DAT</code> with <code>python -I</code>. Where something is a
+model or a fit, it says so. Addresses are linear addresses of the
+unpacked program (see <code>WRITEUP-asm.md</code>).</p>
+<h2 id="at-a-glance">At a glance</h2>
+<ul>
+<li>DOS, PMODE/W 1.20 + Watcom C, <strong>mode 13h</strong> (320x200,
+256 colours, palette through ports 0x3c8/0x3c9). The pixels are not
+square: show it at <strong>4:3</strong>.</li>
+<li>One executable, one 4 MB data blob (<code>DATA.DAT</code>, 24
+assets), one texture (<code>PLASTI3D.PCX</code>), one S3M module
+(<code>MUSTAKS.S3M</code>, played to order 0x34 = 284.9 s, then text
+mode and the string "pertti").</li>
+<li>17 stages in a straight-line list, each
+<code>init(); loop { update() x catch-up; render() } until S3M order &gt;= N</code>.
+<strong>The music is the script</strong>: stage ends are S3M order
+thresholds (<code>re/NOTES.md</code>).</li>
+<li>The demo has almost no polygon or sprite engine. Eleven of the 17
+scenes are the same recipe: a byte plane that is fed by tiny
+splats/lines, blurred 4 pixels at a time in a 32-bit register, with a
+palette made of sine ramps.</li>
+<li>Port: <code>web/</code> (ES modules, no build, libopenmpt in
+<code>web/vendor</code>). All 17 stages are ported; 16 are 0 differing
+pixels against a Unicorn oracle, fx13 differs by one pixel (details at
+the end).</li>
+</ul>
+<h2 id="timeline">Timeline</h2>
+<p>Stage start = S3M (order,row) (<code>web/timetable.js</code>); times
+from libopenmpt (<code>tools/mk_timeline_openmpt.py</code>), they agree
+with the own S3M walker that drove the oracle clock on all 3435 rows
+(max 0.34 s).</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>scene</th>
+<th>starts at order</th>
+<th>render / update</th>
+<th>kind (see below)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fx00</td>
+<td>helicopter</td>
+<td>0</td>
+<td>0x2032b / 0x20401</td>
+<td>precomputed RLE movie, 2x blit</td>
+</tr>
+<tr>
+<td>fx01</td>
+<td>light rays</td>
+<td>3</td>
+<td>0x1e535 / 0x1e752</td>
+<td>rays + blur feedback</td>
+</tr>
+<tr>
+<td>fx02</td>
+<td>moire plasma</td>
+<td>5 row 12</td>
+<td>0x1d770 / 0x1de0a</td>
+<td>texture-coordinate mesh warp</td>
+</tr>
+<tr>
+<td>fx03</td>
+<td>moire + logo</td>
+<td>9</td>
+<td>0x1d378 / 0x1df1e</td>
+<td>mesh warp</td>
+</tr>
+<tr>
+<td>fx04</td>
+<td>light lines</td>
+<td>0x0b</td>
+<td>0x20a13 / 0x20c7a</td>
+<td>lines + blur feedback</td>
+</tr>
+<tr>
+<td>fx05</td>
+<td>cube grid</td>
+<td>0x0e</td>
+<td>0x2111b / 0x2143a</td>
+<td>3D wire grid + blur feedback</td>
+</tr>
+<tr>
+<td>fx06</td>
+<td>vortex</td>
+<td>0x10</td>
+<td>0x23288 / none</td>
+<td>x87 tunnel/vortex on a texture</td>
+</tr>
+<tr>
+<td>fx07</td>
+<td>voronoi wire</td>
+<td>0x14</td>
+<td>0x21840 / 0x21c3b</td>
+<td>3D wire graph + tile counters</td>
+</tr>
+<tr>
+<td>fx08</td>
+<td>star logo</td>
+<td>0x16</td>
+<td>0x1dade / 0x1df98</td>
+<td>mesh warp</td>
+</tr>
+<tr>
+<td>fx09</td>
+<td>flower blob</td>
+<td>0x18</td>
+<td>0x1e8fc / 0x1ffba</td>
+<td>sum-of-sines point curve + blur feedback</td>
+</tr>
+<tr>
+<td>fx10</td>
+<td>megablast logo</td>
+<td>0x1c</td>
+<td>0x1d574 / 0x1df98</td>
+<td>mesh warp</td>
+</tr>
+<tr>
+<td>fx11</td>
+<td>blue ring</td>
+<td>0x20</td>
+<td>0x2217d / 0x2243d</td>
+<td>shared splat-grid engine</td>
+</tr>
+<tr>
+<td>fx12</td>
+<td>checker tunnel</td>
+<td>0x24</td>
+<td>0x20659 / 0x206c1</td>
+<td>precomputed offset table + shading feedback</td>
+</tr>
+<tr>
+<td>fx13</td>
+<td>crowd - Dali</td>
+<td>0x26 (row 0 of order 38 = 0x26)</td>
+<td>0x201ea / 0x203c4</td>
+<td>two-picture cross-fade</td>
+</tr>
+<tr>
+<td>fx14</td>
+<td>bar photo + logo</td>
+<td>0x2a</td>
+<td>0x227ea / 0x22b1c</td>
+<td>particles + blur + displacement</td>
+</tr>
+<tr>
+<td>fx15</td>
+<td>blue sphere</td>
+<td>0x2e</td>
+<td>0x2217d / 0x224e9</td>
+<td>shared engine</td>
+</tr>
+<tr>
+<td>fx16</td>
+<td>green blob</td>
+<td>0x30</td>
+<td>0x2217d / 0x2243d</td>
+<td>shared engine</td>
+</tr>
+</tbody>
+</table>
+<p>Start orders are the "until order" of the previous stage in the table
+of <code>re/NOTES.md</code> (stage N ends at the next stage's start
+order). fx02's start (5,12) is the only one that is not row 0: it is
+read on a 10 fps grid (+-0.1 s), then confirmed by fx01's own end flag
+(its fade reaching 0, 832 oracle ticks = 11.87 s after order 3). Not
+derived.</p>
+<h2 id="display-and-timing">Display and timing</h2>
+<ul>
+<li><code>Tick = inc [0x52888]</code>, called once per vertical retrace,
+assumed 70.086 Hz. <code>update()</code> runs
+<code>ticks elapsed - ticks done</code> times, then
+<code>render()</code> once. So the animation is a function of the tick
+count n, not of the frame count. The port uses
+<code>n = floor((t - T0) * 70.086) + 1</code> (a model: the original's
+own n depends on its real speed).</li>
+<li>Seek classes (what the player does when you drag the bar):
+<strong>pure function of n</strong> (fx00, fx13: compute n, draw),
+<strong>replay</strong> (every feedback or accumulating scene: fx01, 04,
+05, 07, 09, 11, 12, 14, 15, 16 replay from the stage start, at most
+about 1550 ticks, with a cache; fx06 replays only its cheap per-render
+state and draws once), and <strong>chained</strong> (fx02, fx03, fx08,
+fx10 share counters that are never reset, so a stage starts from a state
+replayed through the previous ones).</li>
+<li>Palettes are 6-bit (0..63 per DAC channel); the port shows them as
+<code>c*4</code> (see <code>WRITEUP-asm.md</code> section 10 for how
+they are generated).</li>
+</ul>
+<hr />
+<h2 id="fx00---helicopter-stage-1-orders-0-2">fx00 - helicopter (stage
+1, orders 0-2)</h2>
+<p>A grey helicopter flying over snow mountains. This is a
+<strong>movie</strong>: asset 4 (2,804,544 bytes at DATA.DAT offset
+0x2f4db) is <strong>240 RLE frames of 160x80</strong>
+(<code>0x2018a</code>, 12,800 bytes each), a new one every 6.5 ticks.
+Render (0x2032b): decode the next frame if the "new frame" flag is set,
+then a 2x blit at screen rows 20..177 with horizontal and vertical
+interpolation done in 16-bit registers (<code>WRITEUP-asm.md</code>
+sections 8 and 16), palette = static 6-bit palette (0x46624) times a
+fade (0x100 = 1.0, +2 per tick). Frame index (from the port):
+<code>min(floor((1 + 2n) / 13), 237)</code>. Update: fade += 2; a
+counter += 2, on reaching 13 subtract 13 and advance the frame.
+Exactness: <strong>bit-exact</strong> (1505 oracle frames, 0 differing
+pixels, 0 palette bytes). Pure function of n, exact seek.</p>
+<h2 id="fx01---light-rays-stage-2-orders-3-5">fx01 - light rays (stage
+2, orders 3-5)</h2>
+<p>Radial streaks from a moving bright centre, masked by a picture
+(asset 2, a 320x200 two-value mask). Per tick the number of rays is
+<code>((sine[s2c] + 0xc00) * fade &gt;&gt; 11) + 1</code>; each ray's
+radius follows the 3-instruction LCG (<code>rol(x+0x9d,11)^0x9d</code>,
+0x1e606, <code>WRITEUP-asm.md</code> section 9). A ray is walked pixel
+by pixel with a budget (<code>s30</code>, +4 per tick up to 0x400, reset
+at order 4) <strong>while skipping pixels where the mask is
+non-zero</strong>, and then, if the last tested pixel was 0, on to the
+screen edge without restriction. Each pixel is a saturating 4x4 dot
+(threshold 0xf0), the plane is blurred x0.75 and the palette is three
+sine gradients times the fade. From order 5 the fade drops by 4 per tick
+and the stage ends when it reaches 0 (flag <code>[0x4ab19]</code>): this
+is the only stage whose end is not an S3M threshold, and it fixes fx02's
+start. Exactness: <strong>bit-exact</strong> (832 frames). Feedback:
+replay from the stage start (about 830 ticks).</p>
+<h2 id="fx02--fx03--fx08--fx10---the-moire-family-stages-3-4-9-11">fx02
+/ fx03 / fx08 / fx10 - the moire family (stages 3, 4, 9, 11)</h2>
+<p>Four stages, one engine (<code>web/fx/moire.js</code>): green-teal
+moire plasma over a picture (fx02: the brain/face pictures; fx03:
+"ACCEPT NO LIMITATIONS" logo; fx08: star logo in a circle; fx10: the
+megablast logo with a crosshair). Mechanism: an <strong>81x51 mesh of
+(x,y) texture coordinates</strong> in 24.8 fixed point is rebuilt every
+render from sine-driven counters, over the 256x256 texture of asset 0.
+The picture is drawn as 80x50 cells of 4x4 pixels, each cell walking the
+texture with a linear step between mesh corners
+(<code>WRITEUP-asm.md</code> section 6). The colour of a pixel is
+<code>LUT[(background &lt;&lt; 8) | warp]</code> with the 16 KB table of
+asset 1 (section 5): the table mixes the moire with the background
+picture. Palette = the texture's own palette times a fade (0x100 at
+rest, flashes to 0x200 on the beat; fx08 has no fade at all in its
+render and keeps the init palette). Mesh generators: 0x1d770 (fx02),
+0x1c7c9 (fx03), 0x1dade (fx08), 0x1ca71 (fx10); the tail 0x1dfe2 is
+shared. No framebuffer feedback: a frame is a function of the counters.
+Exactness: <strong>bit-exact</strong> (1478 / 765 / 765 / 1538 oracle
+frames). The counters are never reset between the stages, so the port
+starts each stage from a replayed state; the tick counts of the previous
+stages (1477, 770, 770) come from the oracle's own run and depend on its
+timing, so the start phase is <strong>a fit to that run</strong>, not
+derived.</p>
+<h2 id="fx04---light-lines-stage-5-orders-0x0b-0x0d">fx04 - light lines
+(stage 5, orders 0x0b-0x0d)</h2>
+<p>256 grey light lines on a bright background picture (asset 9, a
+7-value picture). Each line has two endpoints from the sine table
+(angles advanced by +0x9d/+0x1c9 and +0x1d7/+0x303 per ray, wobbled by
+two more sines <code>&lt;&lt; 3</code>); it is walked to the screen edge
+with the line walker of <code>WRITEUP-asm.md</code> section 15 and
+stamped with the 12-pixel dot of section 3 (saturation 0x3e). The plane
+is then blurred x0.75 with the SWAR kernel of section 2 and the picture
+is added as dwords on the way into VRAM. The palette is three slowly
+moving sine ramps (section 10). Exactness: <strong>bit-exact</strong>
+(1149 frames). Replay from the stage start.</p>
+<h2 id="fx05---cube-grid-stage-6-orders-0x0e-0x0f">fx05 - cube grid
+(stage 6, orders 0x0e-0x0f)</h2>
+<p>A red/orange rotating 4x4x4 lattice of points joined by lines (64
+vertices, three edge families +1/+4/+16, 3x4x4 edges each), over a
+picture (asset 8, 4 values). Pure integer 3D: three successive rotations
+<code>(a*c - b*s) &gt;&gt; 10</code>, perspective
+<code>x*128/z + 0xa0</code> by <code>idiv</code>, lines by the
+fx04-style walker (12-pixel dot, saturation 0x38), blur x0.875 over +-4
+pixels / +-4 rows. The beat flash (palette x1.25) is armed by the
+<strong>row</strong> of the S3M (rows 0, 6, 0x12, 0x1c, 0x2a, 0x32,
+0x3e), and because the "previous row" comparison stores the old value
+back, every tick on such a row re-arms it. Exactness:
+<strong>bit-exact</strong> (762 frames). Replay from the stage
+start.</p>
+<h2 id="fx06---vortex-stage-7-orders-0x10-0x13">fx06 - vortex (stage 7,
+orders 0x10-0x13)</h2>
+<p>The only x87 scene: a grey stone texture (PLASTI3D.PCX, 512x512) seen
+through a rotating vortex. Per render: a rotation matrix from
+<code>fsin</code>/<code>fcos</code> (angles from sums of sines of A = 30
+* tick), a <strong>41x26 lattice</strong> of 3D points whose distance is
+computed by the bit-trick square root (<code>WRITEUP-asm.md</code>
+section 11), <code>fpatan</code> for the angle, texture coordinates
+<code>U</code> (2^17 per turn) and <code>V = 128 * (rho + g)</code>,
+then <strong>40x25 cells of 8x8 pixels</strong> bilinearly warping the
+texture. No tables are generated at init (it only loads the PCX and
+shifts the palette <code>&gt;&gt; 2</code>); there is no update loop
+(the tick itself is the clock). Exactness: <strong>0 differing pixels in
+1536 frames</strong>, but not exact by construction: the port uses
+float32 stores (<code>Math.fround</code>) and double arithmetic instead
+of the 80-bit stack, and JS <code>Math.sin</code>/<code>atan2</code>
+instead of the x87 instructions. A tie case would show as a diff; none
+occurred. The tick at the stage start (6505) is the oracle's.</p>
+<h2 id="fx07---voronoi-wire-stage-8-orders-0x14-0x15">fx07 - voronoi
+wire (stage 8, orders 0x14-0x15)</h2>
+<p>A green 3D wire graph (20 vertices, 30 edges: each vertex has degree
+3, i.e. a dodecahedron) over a background of tiles that flicker. Per
+render: 32 LCG steps bump byte counters of a 64x20 tile grid, which is
+drawn as 5x9 patterns selected by <code>counter &amp; 15</code>; the 20
+vertices go through three rotations and an <code>idiv</code>
+perspective; the 30 edges are walked by 0x2157c (the line walker with
+the <code>|d|-1</code> quirk, section 15) into a cleared buffer as 3x3
+splats of 4; the screen is the 4-neighbour sum plus background plus
+tiles, as dword adds with real carries. Exactness: <strong>0 differing
+pixels on rows 1..198</strong>; rows 0 and 199 are not compared and are
+drawn black (not verified). The first oracle frame includes fx06's
+catch-up ticks, modelled by <code>K0 = 1536</code> in the player
+(consistent with the libopenmpt timeline).</p>
+<h2 id="fx09---flower-blob-stage-10-orders-0x18-0x1b">fx09 - flower blob
+(stage 10, orders 0x18-0x1b)</h2>
+<p>A white "flower" made of 1024 points. The radius of each point is a
+sum of 8 sines (phases advancing by +0x14, 0x14, 0x10, 0x400, 0x100,
+0x4a0, 0x200, 0x300 per point) plus a slow breathing term; the angle is
+a spin that grows 4 per point. Each point is a 16x16 saturating splat
+(pattern at 0x464ac, shifted <code>&gt;&gt; 2</code> at init; threshold
+0x3c), then a blur over +-3 pixels / +-3 rows with a
+<code>&gt;&gt;2</code> decay, plus the background picture (asset 18, 3
+values). Palette = sine ramps
+<code>(sin + 0x4400) * i &gt;&gt; 13</code>. The update counters do not
+depend on order or row. Exactness: <strong>bit-exact</strong> (1533
+frames). Replay from the stage start.</p>
+<h2
+id="fx11--fx15--fx16---blue-ring-blue-sphere-green-blob-stages-12-16-17">fx11
+/ fx15 / fx16 - blue ring, blue sphere, green blob (stages 12, 16,
+17)</h2>
+<p>One engine (render 0x2217d), three parameter sets (updates 0x2243d
+for fx11 and fx16, 0x224e9 for fx15). A <strong>128x128 grid</strong> is
+displaced by two sums of four sines, rotated twice, projected on a
+paraboloid and splatted as a 12-byte dot with a <strong>signed</strong>
+saturation test (<code>&lt; 0x3c</code>); the plane is blurred x0.5
+(<code>shr ebx,1</code> at 0x22040; the header comment of
+<code>engine2217.js</code> says 0.75, the disassembly says 0.5) into
+VRAM and the other plane, then swapped. Palette static at 0x4ad24; stage
+17 (green) swaps G and B in place. Cross-stage state is part of the
+definition: the wave phases and amplitude are <strong>not</strong> reset
+between stages. Stage 16 starts with stage 12's final phases (1540
+ticks), stage 17 keeps stage 16's planes and phases and only resets its
+steps. Exactness: <strong>bit-exact</strong> over 1536 / 767 / 1100
+oracle frames, with caveats: the fx16 oracle is checked with a K=7
+history of stage 16 (a different run from the K=1 fx15 oracle), and
+stage 17's start state in the player is the oracle's (770 ticks), not
+derived from the music.</p>
+<h2 id="fx12---checker-tunnel-stage-13-orders-0x24-0x25">fx12 - checker
+tunnel (stage 13, orders 0x24-0x25)</h2>
+<p>A black-and-white checkerboard tunnel. Asset 5 (128,000 bytes) is a
+<strong>precomputed table of 320x200 16-bit texture offsets</strong>
+(one word per screen pixel); asset 6 is the 256x256 texture with its
+palette; asset 7 the shade table. Each pixel is
+<code>tex[(OFF[p] + si) &amp; 0xffff]</code> (the wrap-around of
+<code>WRITEUP-asm.md</code> section 4), with
+<code>si = (da&gt;&gt;4) + ((de&gt;&gt;4)&lt;&lt;8)</code> the camera.
+For the first 200 columns the shaded texel is also written to a second
+256x256 buffer (stride 256) which becomes the next frame's texture
+(feedback), then the buffers swap. The camera moves with a table of
+motion words per order (static at 0x47506); the shade level grows +2 per
+tick up to 0xb0 after the first render; the palette is faded in by +4
+per tick. Exactness: <strong>bit-exact</strong> (765 frames). Replay
+from the stage start; the checker replays the oracle's per-render
+orders.</p>
+<h2 id="fx13---crowd-to-dali-stage-14-orders-0x26-0x29">fx13 - crowd to
+Dali (stage 14, orders 0x26-0x29)</h2>
+<p>A crowd animation morphs into a Dali picture. Asset 17 (69,020 bytes)
+is <strong>7 RLE frames of 160x100</strong> (0x20163, 16,000 bytes
+each); asset 21 is the 320x350 picture which scrolls by
+<code>min(n, 0x4b0) &gt;&gt; 3</code> rows (0 to 150 of 350). The
+animation frame is <code>(n % 14) &gt;&gt; 1</code>. Every render
+rebuilds two 256-entry tables from a sine
+(<code>A = (sine + 0x400) &gt;&gt; 3</code>, <code>B = 0x100 - A</code>)
+and mixes: <code>pixel = LA[anim] + LB[pic]</code>
+(<code>WRITEUP-asm.md</code> section 7); the animation is first upscaled
+2x with the register-level interpolation of section 8, rows 6..193 only.
+The palette is static (0x469ec) and never faded. Exactness: <strong>not
+fully bit-exact</strong>: 161 differing pixels over 1538 frames (98.4 M
+pixels), all the same pixel (314,193), in frames where the animation
+frame is 6. The last output row of 0x20454 reads one source row past the
+end of the original's 112,000-byte buffer; the port reads 0 and the
+original reads something that changes over time (not identified, not
+guessed). Palette identical. Pure function of n.</p>
+<h2 id="fx14---bar-photo-and-logo-stage-15-orders-0x2a-0x2d">fx14 - bar
+photo and logo (stage 15, orders 0x2a-0x2d)</h2>
+<p>A photo of people at a bar (asset 16) blended with the megablast logo
+(asset 20), disturbed by glowing particles. Per tick four phases advance
+(+13, +32, +13, +15, all <code>&amp; 0xfff</code>). Per render: a shade
+table, from order 0x2b 2048 particles (positions and speeds from the LCG
+generator at 0x22736, seed 0x34c297) added as four dwords each
+(<code>WRITEUP-asm.md</code> section 14), a toroidal 16-bit-pointer blur
+with <code>&gt;&gt;3</code> and mask 0x0f0f0f0f (section 4), four sine
+wobbles, and a <strong>displacement warp</strong> of the picture source
+by the gradient of the blurred plane (section 13). Final pixel
+<code>LUT[SH[...] &lt;&lt; 8 | warp]</code> with the 16 KB LUT of asset
+19. The picture warp reads outside the picture, so the port keeps 0x5000
+bytes of DATA.DAT around asset 16's pixels
+(<code>tools/export_fx14.py</code>). The stage writes rows 8..191 only
+(0xe600 bytes from 0xa00); the other rows keep fx13's last frame under
+fx14's palette (green bands in the emulator), and the player draws them
+black. Exactness: <strong>bit-exact</strong> on the rows it writes (1538
+frames); the real tick count per render and fx13's last render count
+(1533 in the oracle, because of K=7 batching) are timing dependent. The
+comment in <code>fx14.js</code> saying rows 8..183 is a typo: 0xe600
+bytes from row 8 is rows 8..191.</p>
+<hr />
+<h2 id="the-art-where-it-lives-how-it-was-decoded">The art: where it
+lives, how it was decoded</h2>
+<p>There is <strong>no polygon model, mesh file, font file or sprite
+sheet</strong> in this demo. The 3D is procedural: fx05 is a 4x4x4 grid
+generated from index arithmetic, fx07 has a small vertex/edge table in
+the data segment (20 vertices, 30 edges, exported by
+<code>tools/export_fx07.py</code>), fx06 and the shared engine generate
+their surfaces from sines. Text mode and the string "pertti" at the end
+are the C runtime, not an asset. The 2D art is the 24 assets of
+<code>DATA.DAT</code> plus <code>PLASTI3D.PCX</code>.</p>
+<h3 id="container">Container</h3>
+<p><code>DATA.DAT</code> (4,010,595 bytes) is a single blob that the
+program reads whole (open at 0x1e168, read at 0x1e172; the
+"TITANICS-cruncher" string in the CRT is a leftover, nothing is
+compressed). <strong>24 offsets</strong> in a table at 0x4ab1d
+(relocated by the load address in the loop at 0x21dd6) index into it; an
+asset's size is the distance to the next offset.
+<code>re/extract_data.py</code> cuts them into
+<code>re/assets/NN_offset_size.bin</code>;
+<code>tools/export_*.py</code> repack what each effect needs into
+<code>web/assets/*.bin</code>. Which stage uses which asset was found
+from the code references to the table.</p>
+<h3 id="formats">Formats</h3>
+<table>
+<thead>
+<tr>
+<th>format</th>
+<th>what it is</th>
+<th>decoded by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RIX3</strong> (ColoRIX)</td>
+<td>header <code>RIX3</code>, width, height (u16 each), flag 0xaf,
+palette at +10 (768 bytes, <strong>6-bit</strong>), then raw 8-bit
+pixels at +0x30a</td>
+<td><code>export_moire.py</code>, <code>export_fx12.py</code>,
+<code>export_fx14.py</code></td>
+</tr>
+<tr>
+<td><strong>PCX v5</strong></td>
+<td>RLE (top two bits set = run), 8-bit, a 768-byte 8-bit palette after
+a 0x0c marker; the demo skips the 0x80 header and decodes until 64,000
+bytes</td>
+<td>0x1c768 (moire backgrounds), <code>export_moire.py</code>; PLASTI3D
+by 0x231c4</td>
+</tr>
+<tr>
+<td><strong>raw 8-bit plane</strong></td>
+<td>64,000 bytes = 320x200, or 16,384 = a 64x256 table, or 128x128</td>
+<td>direct</td>
+</tr>
+<tr>
+<td><strong>RLE animation</strong></td>
+<td>frames of 160x80 or 160x100: byte&amp;0xc0 == 0xc0 -&gt; run of
+(byte&amp;63) x next byte, else a literal, until exactly 12,800 / 16,000
+bytes</td>
+<td>0x2018a / 0x20163</td>
+</tr>
+</tbody>
+</table>
+<h3 id="catalogue-previews-in-figures">Catalogue (previews in
+<code>figures/</code>)</h3>
+<p>Colour counts are the number of distinct pixel values actually used
+(measured with <code>python -I</code>). "6-bit" palettes are shown
+multiplied by 4. Preview palettes: RIX3 = its own; PCX = its own 8-bit
+palette (the moire stages use only the <strong>indices</strong> of the
+PCXs and the palette of asset 0, so these previews show the picture, not
+what the stage shows); static palettes were read from the program's data
+at the addresses given.</p>
+<table>
+<thead>
+<tr>
+<th>asset</th>
+<th>offset in DATA.DAT</th>
+<th>size</th>
+<th>format</th>
+<th>colours used</th>
+<th>used by</th>
+<th>preview</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0x000000</td>
+<td>66,314</td>
+<td>RIX3 256x256 + palette</td>
+<td>91</td>
+<td>moire texture + palette (fx02/03/08/10)</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a00_rix.png">a00_rix.png</a></td>
+</tr>
+<tr>
+<td>1</td>
+<td>0x01030a</td>
+<td>16,384</td>
+<td>raw 64x256 table</td>
+<td>255</td>
+<td>moire colour LUT <code>[bg&lt;&lt;8 | warp]</code></td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a01_table.png">a01_table.png</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>0x01430a</td>
+<td>64,000</td>
+<td>raw 320x200</td>
+<td>2</td>
+<td>fx01 mask</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a02_index.png">a02_index.png</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>0x023d0a</td>
+<td>47,057</td>
+<td>PCX 320x200</td>
+<td>26</td>
+<td>fx03 background</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a03_pcx.png">a03_pcx.png</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>0x02f4db</td>
+<td>2,804,544</td>
+<td>240 RLE frames 160x80</td>
+<td>see below</td>
+<td>fx00 movie (static palette at 0x46624)</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a04_fx00_frames.png">a04_fx00_frames.png</a></td>
+</tr>
+<tr>
+<td>5</td>
+<td>0x2dc01b</td>
+<td>128,000</td>
+<td>320x200 u16 offsets</td>
+<td>256 byte values</td>
+<td>fx12 per-pixel texture offsets</td>
+<td>(not an image)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>0x2fb41b</td>
+<td>66,314</td>
+<td>RIX3 256x256 + palette</td>
+<td>13</td>
+<td>fx12 tunnel texture</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a06_rix.png">a06_rix.png</a></td>
+</tr>
+<tr>
+<td>7</td>
+<td>0x30b725</td>
+<td>16,384</td>
+<td>raw 64x256 table</td>
+<td>137</td>
+<td>fx12 shade table</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a07_table.png">a07_table.png</a></td>
+</tr>
+<tr>
+<td>8</td>
+<td>0x30f725</td>
+<td>64,000</td>
+<td>raw 320x200</td>
+<td>4</td>
+<td>fx05 background (static palette 0x47f60)</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a08_fx05bg.png">a08_fx05bg.png</a></td>
+</tr>
+<tr>
+<td>9</td>
+<td>0x31f125</td>
+<td>64,000</td>
+<td>raw 320x200</td>
+<td>7</td>
+<td>fx04 background</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a09_index.png">a09_index.png</a></td>
+</tr>
+<tr>
+<td>10</td>
+<td>0x32eb25</td>
+<td>44,129</td>
+<td>PCX 320x200</td>
+<td>28</td>
+<td>fx02 background (order 7)</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a10_pcx.png">a10_pcx.png</a></td>
+</tr>
+<tr>
+<td>11</td>
+<td>0x339786</td>
+<td>44,237</td>
+<td>PCX 320x200</td>
+<td>29</td>
+<td>fx02 background (order 8)</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a11_pcx.png">a11_pcx.png</a></td>
+</tr>
+<tr>
+<td>12</td>
+<td>0x344453</td>
+<td>42,182</td>
+<td>PCX 320x200</td>
+<td>24</td>
+<td>fx02 background (order 6)</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a12_pcx.png">a12_pcx.png</a></td>
+</tr>
+<tr>
+<td>13</td>
+<td>0x34e919</td>
+<td>26,404</td>
+<td>PCX 320x200</td>
+<td>38</td>
+<td>fx08 background (star logo)</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a13_pcx.png">a13_pcx.png</a></td>
+</tr>
+<tr>
+<td>14</td>
+<td>0x35503d</td>
+<td>36,437</td>
+<td>PCX 320x200</td>
+<td>14</td>
+<td>fx02 background (order 5)</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a14_pcx.png">a14_pcx.png</a></td>
+</tr>
+<tr>
+<td>15</td>
+<td>0x35de92</td>
+<td>19,930</td>
+<td>PCX 320x200</td>
+<td>42</td>
+<td>fx10 background</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a15_pcx.png">a15_pcx.png</a></td>
+</tr>
+<tr>
+<td>16</td>
+<td>0x362c6c</td>
+<td>64,778</td>
+<td>RIX3 320x200 + palette</td>
+<td>183</td>
+<td>fx14 photo (bar) and its palette</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a16_rix.png">a16_rix.png</a></td>
+</tr>
+<tr>
+<td>17</td>
+<td>0x372976</td>
+<td>69,020</td>
+<td>7 RLE frames 160x100</td>
+<td>79</td>
+<td>fx13 animation</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a17_fx13_frames.png">a17_fx13_frames.png</a></td>
+</tr>
+<tr>
+<td>18</td>
+<td>0x383712</td>
+<td>64,000</td>
+<td>raw 320x200</td>
+<td>3</td>
+<td>fx09 background</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a18_index.png">a18_index.png</a></td>
+</tr>
+<tr>
+<td>19</td>
+<td>0x393112</td>
+<td>16,384</td>
+<td>raw 64x256 table</td>
+<td>213</td>
+<td>fx14 colour LUT</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a19_table.png">a19_table.png</a></td>
+</tr>
+<tr>
+<td>20</td>
+<td>0x397112</td>
+<td>64,000</td>
+<td>raw 320x200</td>
+<td>33</td>
+<td>fx14 megablast logo</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a20_index.png">a20_index.png</a></td>
+</tr>
+<tr>
+<td>21</td>
+<td>0x3a6b12</td>
+<td>112,000</td>
+<td>raw 320x350</td>
+<td>16</td>
+<td>fx13 Dali picture (static palette 0x469ec)</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a21_fx13pic.png">a21_fx13pic.png</a></td>
+</tr>
+<tr>
+<td>22</td>
+<td>0x3c2092</td>
+<td>6,097</td>
+<td>PCX 320x200</td>
+<td>3</td>
+<td>fx07 background</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a22_pcx.png">a22_pcx.png</a></td>
+</tr>
+<tr>
+<td>23</td>
+<td>0x3c3863</td>
+<td>64,000</td>
+<td>raw 320x200</td>
+<td>19</td>
+<td><strong>not used by any stage</strong>: only an uncalled routine
+(0x202ae) references it</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/a23_unreached.png">a23_unreached.png</a></td>
+</tr>
+<tr>
+<td>-</td>
+<td><code>PLASTI3D.PCX</code> (separate file)</td>
+<td>242,678</td>
+<td>PCX 512x512, 8-bit palette (max 251, the init shifts it
+<code>&gt;&gt; 2</code>)</td>
+<td>63</td>
+<td>fx06 vortex texture</td>
+<td><a
+href="https://github.com/kassoulet/Megablast_by_Orange/blob/main/figures/plasti3d.png">plasti3d.png</a></td>
+</tr>
+</tbody>
+</table>
+<p>Notes:</p>
+<ul>
+<li>Asset 4 (the helicopter) holds 240 frames decoded with the static
+palette at 0x46624; the preview sheet shows frames 0, 40, 80, 120, 160,
+237. It was first labelled "unknown stream" in the early notes; the RLE
+and the frame size were found from the render code. Colour count not
+recomputed here.</li>
+<li>Assets 17 and 21 together are fx13; the preview of asset 21 uses the
+static palette at 0x469ec, 6-bit, set once at init.</li>
+<li>The asset-to-stage links come from the export scripts
+(<code>tools/export_moire.py</code>,
+<code>export_fx01/04/07/12/14.py</code>); fx02's backgrounds per order
+(assets 14, 12, 10, 11 for orders 5..8) are the ones in the
+<code>export_moire.py</code> docstring. Figure file names carry the
+asset number.</li>
+<li>fx11, fx15, fx16 and the fx05 lattice have no picture at all: their
+only data are the sine table (static, 0x3705e, 5121 dwords, +-1023,
+cosine = index + 0x401) and their palette (0x4ad24 for the shared
+engine).</li>
+</ul>
+<h2 id="what-is-bit-exact-and-what-is-not">What is bit-exact and what is
+not</h2>
+<table>
+<thead>
+<tr>
+<th>scene</th>
+<th>result vs the Unicorn oracle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fx00, 01, 04, 05, 09, 11, 12, 15, 16, 14</td>
+<td>0 differing pixels, 0 palette bytes</td>
+</tr>
+<tr>
+<td>fx02, 03, 08, 10</td>
+<td>0 differing pixels, but the chained start counters are a fit to the
+oracle run</td>
+</tr>
+<tr>
+<td>fx06</td>
+<td>0 differing pixels in 1536 frames, exact only empirically
+(float32/double instead of 80-bit x87)</td>
+</tr>
+<tr>
+<td>fx07</td>
+<td>0 differing pixels on rows 1..198; rows 0 and 199 not compared</td>
+</tr>
+<tr>
+<td>fx13</td>
+<td>161 pixels differ, all at (314,193) in animation frame 6, cause
+unresolved</td>
+</tr>
+</tbody>
+</table>
+<p>For every scene the <strong>tick count at a music time is a
+model</strong> (<code>n = floor((t - T0) * 70.086) + 1</code>), not a
+derivation. The oracle itself is a deterministic Unicorn run on a
+virtual clock; the real original's frame count at a given music position
+depends on the machine.</p>
+<h2 id="known-discrepancies-in-the-existing-comments">Known
+discrepancies in the existing comments</h2>
+<ul>
+<li><code>web/fx/engine2217.js</code> says the blur is x0.75; the asm at
+0x22040 shifts by 1 (x0.5).</li>
+<li><code>web/fx/fx14.js</code> says the stage writes rows 8..183;
+0xe600 bytes from 0xa00 is rows 8..191.</li>
+</ul>
+</body>
+</html>
